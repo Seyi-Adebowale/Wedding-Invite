@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     // Initialize Email.js with your user ID
-    emailjs.init("6eNgKWpaKhACrc40u"); 
+    emailjs.init("6eNgKWpaKhACrc40u");  
+
+    // Image flipping
+    const flipCard = document.getElementById("flip-card");
+    flipCard.addEventListener("click", () => {
+        flipCard.classList.toggle("flipped");
+    });
 
     // Modal functionality
     const modal = document.getElementById("modal");
@@ -18,8 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const stages = [
         `
-        <p>Please continue to confirm your attendance or to decline:</p>
-        <button id="continue-btn" class="btn">Continue</button>
+        <p>Please confirm if you will attend</p>
+        <div class="attend-btns">
+        <button id="yes-btn" class="btn">Yes</button>
+        <button id="no-btn" class="btn">No</button>
+        </div>
       `,
         `
         <p>Please enter your first and last name:</p>
@@ -41,50 +50,111 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         <p>Thank you for your RSVP submission! An invite will be sent to you shortly.</p>
       `,
+        `
+        <p>You have already completed this process.</p>
+      `
     ];
+
+    // Check if the user has already completed the process
+    function hasCompletedRSVP() {
+        return getCookie("rsvpCompleted") === "true";
+    }
+
+    // Set a cookie to mark the form as completed
+    function setRSVPCompleted() {
+        setCookie("rsvpCompleted", "true", 7); // Cookie expires in 7 days
+    }
+
+    // Set a cookie with a specified name and value
+    function setCookie(name, value, days) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000)); // Expiry in days
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    }
+
+    // Get a cookie value by its name
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == " ") c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
 
     // Update modal content
     function updateModal() {
-        stageContainer.innerHTML = stages[currentStage];
+        if (hasCompletedRSVP()) {
+            // If user has already completed the process, show "You have already completed this process"
+            stageContainer.innerHTML = stages[stages.length - 1]; // Show the last stage (completed message)
+            prevBtn.style.display = "none"; // Hide "Previous" button on this stage
+        } else {
+            // Show the appropriate stage
+            stageContainer.innerHTML = stages[currentStage];
 
-        // Hide Previous button on first and last stages
-        prevBtn.style.display = currentStage === 0 || currentStage === stages.length - 1 ? "none" : "inline-block";
+            // Hide Previous button on first and last stages
+            prevBtn.style.display = currentStage === 0 || currentStage === stages.length - 2 ? "none" : "inline-block";
 
-        // Add functionality for the "Continue" button
-        const form = document.getElementById("stage-form");
-        const continueBtn = document.getElementById("continue-btn");
+            // Handle button clicks for "Yes" and "No" in Stage 1
+            if (currentStage === 0) {
+                const yesBtn = document.getElementById("yes-btn");
+                const noBtn = document.getElementById("no-btn");
 
-        if (form) {
-            // Handle form submissions for stages with input
-            form.addEventListener("submit", (event) => {
-                event.preventDefault(); // Prevent form submission to allow stage progression
+                yesBtn.addEventListener("click", () => {
+                    // Proceed to next stage (Stage 2)
+                    currentStage++;
+                    updateModal();
+                });
 
-                // Store form data
-                if (currentStage === 1) {
-                    formData.firstName = document.getElementById("first-name").value;
-                    formData.lastName = document.getElementById("last-name").value;
-                } else if (currentStage === 2) {
-                    formData.whatsappNumber = document.getElementById("whatsapp-number").value;
-                }
+                noBtn.addEventListener("click", () => {
+                    // Close the modal if "No" is clicked
+                    modal.style.display = "none";
+                });
+            }
 
-                // Proceed to next stage
-                currentStage++;
-                updateModal();
-            });
-        } else if (continueBtn) {
-            continueBtn.addEventListener("click", () => {
-                // Handle continue button click for stages without form
-                currentStage++;
-                updateModal();
-            });
-        }
+            // Add functionality for the "Continue" button in other stages
+            const form = document.getElementById("stage-form");
+            const continueBtn = document.getElementById("continue-btn");
 
-        // Populate fields with saved data when navigating back
-        if (currentStage === 1) {
-            document.getElementById("first-name").value = formData.firstName;
-            document.getElementById("last-name").value = formData.lastName;
-        } else if (currentStage === 2) {
-            document.getElementById("whatsapp-number").value = formData.whatsappNumber;
+            if (form) {
+                // Handle form submissions for stages with input
+                form.addEventListener("submit", (event) => {
+                    event.preventDefault(); // Prevent form submission to allow stage progression
+
+                    // Store form data
+                    if (currentStage === 1) {
+                        formData.firstName = document.getElementById("first-name").value;
+                        formData.lastName = document.getElementById("last-name").value;
+                    } else if (currentStage === 2) {
+                        formData.whatsappNumber = document.getElementById("whatsapp-number").value;
+                    }
+
+                    // If it's the final stage, send the email
+                    if (currentStage === 2) {
+                        sendEmail();
+                    }
+
+                    // Proceed to next stage
+                    currentStage++;
+                    updateModal();
+                });
+            } else if (continueBtn) {
+                continueBtn.addEventListener("click", () => {
+                    // Handle continue button click for stages without form
+                    currentStage++;
+                    updateModal();
+                });
+            }
+
+            // Populate fields with saved data when navigating back
+            if (currentStage === 1) {
+                document.getElementById("first-name").value = formData.firstName;
+                document.getElementById("last-name").value = formData.lastName;
+            } else if (currentStage === 2) {
+                document.getElementById("whatsapp-number").value = formData.whatsappNumber;
+            }
         }
     }
 
@@ -136,14 +206,11 @@ document.addEventListener("DOMContentLoaded", () => {
         emailjs.send("service_8liafng", "template_awplail", emailData)
             .then((response) => {
                 console.log("Email sent successfully", response);
+                // Mark as completed after the email is sent
+                setRSVPCompleted();
             })
             .catch((error) => {
                 console.log("Error sending email", error);
             });
-    }
-
-    // Send email when the final stage is reached
-    if (currentStage === 3) {
-        sendEmail();
     }
 });
