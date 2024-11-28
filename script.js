@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Image flipping
-    const flipCard = document.getElementById("flip-card");
-    flipCard.addEventListener("click", () => {
-        flipCard.classList.toggle("flipped");
-    });
+    // Initialize Email.js with your user ID
+    emailjs.init("6eNgKWpaKhACrc40u"); 
 
     // Modal functionality
     const modal = document.getElementById("modal");
@@ -125,4 +122,28 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.whatsappNumber = "";
         }
     });
+
+    // Function to send email using Email.js
+    function sendEmail() {
+        // Prepare email data
+        const emailData = {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            whatsapp_number: formData.whatsappNumber,
+        };
+
+        // Send email using Email.js
+        emailjs.send("service_8liafng", "template_awplail", emailData)
+            .then((response) => {
+                console.log("Email sent successfully", response);
+            })
+            .catch((error) => {
+                console.log("Error sending email", error);
+            });
+    }
+
+    // Send email when the final stage is reached
+    if (currentStage === 3) {
+        sendEmail();
+    }
 });
