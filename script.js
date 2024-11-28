@@ -98,9 +98,13 @@ document.addEventListener("DOMContentLoaded", () => {
         updateModal();
     });
 
-    // Close modal
+    // Close modal and clear saved data
     closeModal.addEventListener("click", () => {
         modal.style.display = "none";
+        // Clear form data when the modal is closed
+        formData.firstName = "";
+        formData.lastName = "";
+        formData.whatsappNumber = "";
     });
 
     // Navigate back
@@ -115,6 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("click", (e) => {
         if (e.target === modal) {
             modal.style.display = "none";
+            // Clear form data when the modal is closed
+            formData.firstName = "";
+            formData.lastName = "";
+            formData.whatsappNumber = "";
         }
     });
 });
