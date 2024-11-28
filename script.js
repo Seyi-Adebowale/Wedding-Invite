@@ -20,14 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
         firstName: "",
         lastName: "",
         whatsappNumber: "",
+        guest1: "",
+        guest2: "",
     };
 
     const stages = [
-        `
+        ` 
         <p>Please confirm if you will attend</p>
         <div class="attend-btns">
-        <button id="yes-btn" class="btn">Yes</button>
-        <button id="no-btn" class="btn">No</button>
+            <button id="yes-btn" class="btn">Yes</button>
+            <button id="no-btn" class="btn">No</button>
         </div>
       `,
         `
@@ -36,6 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="stage-form-inputs">
                 <input id="first-name" type="text" placeholder="First Name" required>
                 <input id="last-name" type="text" placeholder="Last Name" required>
+            </div>
+            <button id="continue-btn" class="btn" type="submit">Continue</button>
+        </form>
+      `,
+        `
+        <p>Add Guests (Maximum of 2)</p>
+        <form id="stage-form">
+            <div class="stage-form-inputs">
+                <input id="guest1" type="text" placeholder="Guest 1 Full Name">
+                <input id="guest2" type="text" placeholder="Guest 2 Full Name">
             </div>
             <button id="continue-btn" class="btn" type="submit">Continue</button>
         </form>
@@ -128,11 +140,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         formData.firstName = document.getElementById("first-name").value;
                         formData.lastName = document.getElementById("last-name").value;
                     } else if (currentStage === 2) {
+                        formData.guest1 = document.getElementById("guest1").value;
+                        formData.guest2 = document.getElementById("guest2").value;
+                    } else if (currentStage === 3) {
                         formData.whatsappNumber = document.getElementById("whatsapp-number").value;
                     }
 
                     // If it's the final stage, send the email
-                    if (currentStage === 2) {
+                    if (currentStage === 3) {
                         sendEmail();
                     }
 
@@ -153,6 +168,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("first-name").value = formData.firstName;
                 document.getElementById("last-name").value = formData.lastName;
             } else if (currentStage === 2) {
+                document.getElementById("guest1").value = formData.guest1;
+                document.getElementById("guest2").value = formData.guest2;
+            } else if (currentStage === 3) {
                 document.getElementById("whatsapp-number").value = formData.whatsappNumber;
             }
         }
@@ -172,6 +190,8 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.firstName = "";
         formData.lastName = "";
         formData.whatsappNumber = "";
+        formData.guest1 = "";
+        formData.guest2 = "";
     });
 
     // Navigate back
@@ -190,6 +210,8 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.firstName = "";
             formData.lastName = "";
             formData.whatsappNumber = "";
+            formData.guest1 = "";
+            formData.guest2 = "";
         }
     });
 
@@ -200,17 +222,20 @@ document.addEventListener("DOMContentLoaded", () => {
             first_name: formData.firstName,
             last_name: formData.lastName,
             whatsapp_number: formData.whatsappNumber,
+            guest1: formData.guest1 || "None", 
+            guest2: formData.guest2 || "None", 
         };
 
-        // Send email using Email.js
+        // Send the email
         emailjs.send("service_8liafng", "template_awplail", emailData)
             .then((response) => {
-                console.log("Email sent successfully", response);
-                // Mark as completed after the email is sent
-                setRSVPCompleted();
+                // console.log("RSVP email sent successfully:", response);
+                setRSVPCompleted(); // Mark as completed
+                // Show the confirmation message after sending the email
+                stageContainer.innerHTML = stages[4];
             })
             .catch((error) => {
-                console.log("Error sending email", error);
+                console.error("Error sending RSVP email:", error);
             });
     }
 });
