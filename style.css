@@ -1,0 +1,199 @@
+/* General page styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header styles */
+.header {
+    background-color: black;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  marquee {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+ main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 87dvh;
+ }
+  
+  /* Image container for flipping effect */
+  .tap-card{
+    outline: 1px solid black;
+    border-radius: 10px;
+    padding: 2px 20px;
+    margin: 10px 0 0 0;
+  }
+  .image-container {
+    perspective: 1000px;
+    width: 90%;
+    max-width: 400px;
+    height: 70vh;
+    margin: auto;
+  }
+  
+  .flip-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+  }
+  
+  .flip-card img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    /* object-fit: cover; */
+    margin: auto;
+    text-align: center;
+  }
+  
+  .flip-card .back {
+    transform: rotateY(180deg);
+  }
+  
+  .flipped {
+    transform: rotateY(180deg);
+  }
+  footer{
+    height: 10dvh;
+    margin: auto;
+  }
+  /* RSVP button */
+  .rsvp-btn {
+    background-color: #000;
+    color: white;
+    padding: 15px 90px;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+  }
+  @media(hover:hover){
+    .rsvp-btn:hover {
+        background-color: #e7356d;
+      }
+  }
+ 
+  
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    /* padding: 20px; */
+  }
+  .modal p{
+    font-size: 20px; 
+    line-height: 30px;
+  }
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: auto;
+    width: max-content;
+    max-width: 400px;
+    margin: 15px;
+    /* width: 400px; */
+    position: relative;
+  }
+  
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    color: rgb(211, 7, 7);
+    font-weight: 700;
+  }
+  @media(hover:hover){
+    .close:hover {
+        color: #333;
+      }
+  }
+ 
+  
+  .btn {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px auto 10px;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #0b7dda;
+  }
+  
+  #prev-btn {
+    display: none;
+    cursor: pointer;
+    margin-top: 30px; 
+    font-size: 18px;
+  }
+  @media(hover:hover){
+    #prev-btn:hover{
+        text-decoration: underline;
+      }
+  }
+ 
+  #stage-container{
+    margin-top: 40px;
+  }
+  #stage-form{
+    display: flex;
+    flex-direction: column;
+  }
+  .stage-form-inputs{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    
+  }
+  .stage-form-inputs input{
+    padding: 10px 5px;
+    width: 100%;
+    max-width: 180px;
+    font-size: 18px;
+  }
+  #whatsapp-number{
+    max-width: 100%;
+    padding: 10px 5px;
+    font-size: 18px;
+  }

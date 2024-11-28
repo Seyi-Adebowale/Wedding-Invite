@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wedding RSVP</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/6b219ab309.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header class="header">
+      <marquee behavior="scroll" direction="left">INVITE ADMITS ONE!</marquee>
+    </header>
+
+    <main>
+      <p class="tap-card">Tap card to flip 👇</p>
+
+      <div class="image-container">
+        <div class="flip-card" id="flip-card">
+          <img src="img/page1.jpeg" alt="Front Image" class="front" />
+          <img src="img/page2.jpeg" alt="Back Image" class="back" />
+        </div>
+      </div>
+    </main>
+
+    <footer>
+        <button id="rsvp-btn" class="rsvp-btn">RSVP</button>
+    </footer>
+   
+    
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <i id="close" class="fas fa-times-circle close"></i>
+        <div id="stage-container"></div>
+        <div class="modal-footer">
+          <div id="prev-btn">
+            <i class="fas fa-arrow-alt-circle-left"></i>
+            <span>Previous</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
